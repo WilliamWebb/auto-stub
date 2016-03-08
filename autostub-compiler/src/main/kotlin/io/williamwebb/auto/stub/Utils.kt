@@ -3,6 +3,7 @@ package io.williamwebb.auto.stub
 import java.lang.reflect.Executable
 import java.lang.reflect.Modifier
 import java.util.*
+import javax.lang.model.type.MirroredTypeException
 
 // java.lang.reflect.Modifier
 // javax.lang.model.element.Modifier
@@ -34,4 +35,12 @@ fun Class<*>.modifiers(): Array<javax.lang.model.element.Modifier> {
 
 fun Executable.modifiers(): Set<javax.lang.model.element.Modifier> {
   return getModifiers(modifiers)
+}
+
+fun AutoStub.Stub.className(): String {
+  try {
+    return (this.value as Class<*>).toString() // this should throw
+  } catch (mte: MirroredTypeException) {
+    return mte.typeMirror.toString()
+  }
 }

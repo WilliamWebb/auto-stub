@@ -5,8 +5,6 @@ import java.util.*
 import javax.annotation.processing.*
 import javax.lang.model.SourceVersion
 import javax.lang.model.element.TypeElement
-import javax.lang.model.type.MirroredTypeException
-import javax.lang.model.type.TypeMirror
 import javax.lang.model.util.Elements
 import javax.lang.model.util.Types
 
@@ -51,17 +49,10 @@ open class AutoStubProcessor : AbstractProcessor() {
       .map { it.getAnnotation(AutoStub::class.java) }
       .map { it.value.toList() }
       .flatMap { it }
-      .map { getMyValue(it) } // get Annotation value
-      .map { Class.forName(it.toString()) }
+      .map { Class.forName(it.className()) }
       .map {
         createStubModel(it, it.`package`.name)
       }
-  }
-
-  private fun processInnerClasses(parent: String, clazz: Class<*>): List<StubModel> {
-    return clazz.declaredClasses.map {
-      createStubModel(it, "${clazz.`package`.name}.$parent")
-    }.toList()
   }
 
   private fun createStubModel(clazz: Class<*>, packageName: String): StubModel =
@@ -74,12 +65,10 @@ open class AutoStubProcessor : AbstractProcessor() {
           processInnerClasses(packageName, clazz)
       )
 
-  private fun getMyValue(annotation: AutoStub.Stub): TypeMirror {
-    try {
-      return annotation.value as TypeMirror // this should throw
-    } catch (mte: MirroredTypeException) {
-      return mte.typeMirror
-    }
+  private fun processInnerClasses(parent: String, clazz: Class<*>): List<StubModel> {
+    return clazz.declaredClasses.map {
+      createStubModel(it, "${clazz.`package`.name}.$parent")
+    }.toList()
   }
 
   override fun getSupportedSourceVersion(): SourceVersion {
