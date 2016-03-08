@@ -1,0 +1,41 @@
+buildscript {
+    ext.kotlin_version = '1.0.0'
+
+    repositories {
+        jcenter()
+        maven {
+            url "https://plugins.gradle.org/m2/"
+        }
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:2.0.0-beta6'
+        classpath "net.ltgt.gradle:gradle-apt-plugin:0.5"
+
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+    }
+}
+
+allprojects {
+    repositories {
+        jcenter()
+    }
+    group = GROUP
+    version = VERSION_NAME
+}
+
+ext.deps = [
+        // Square
+        javapoet          : 'com.squareup:javapoet:1.5.1',
+
+        junit             : 'junit:junit:4.12',
+        autoservice       : 'com.google.auto.service:auto-service:1.0-rc2',
+
+        // Kotlin
+        kotlin_stdlib     : "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version",
+        kotlin_junit      : "org.jetbrains.kotlin:kotlin-test-junit:$kotlin_version"
+
+]
+
+task clean(type: Delete) {
+    delete rootProject.buildDir
+}

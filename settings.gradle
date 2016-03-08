@@ -1,0 +1,1 @@
+include ':autostub-annotations', ':autostub-compiler', ':example:source', ':example:stub'

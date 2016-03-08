@@ -1,0 +1,17 @@
+apply plugin: 'java'
+apply plugin: "net.ltgt.apt"
+
+configurations {
+    provided
+    compile.extendsFrom provided
+}
+
+dependencies {
+    provided project(":example:source")
+    apt project(":example:source")
+
+    provided project(':autostub-annotations')
+    apt project(':autostub-compiler')
+
+    testCompile deps.junit
+}

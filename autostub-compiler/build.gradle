@@ -1,0 +1,18 @@
+apply plugin: 'kotlin'
+apply from: rootProject.file('gradle/gradle-mvn-push.gradle')
+
+dependencies {
+    compile deps.kotlin_stdlib
+
+    compile project(":autostub-annotations")
+    compile deps.autoservice
+    kapt deps.autoservice
+    compile deps.javapoet
+
+    testCompile deps.junit
+    testCompile deps.kotlin_junit
+}
+
+kapt {
+    generateStubs = true
+}
