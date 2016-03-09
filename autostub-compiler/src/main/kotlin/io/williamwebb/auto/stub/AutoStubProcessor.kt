@@ -41,7 +41,7 @@ open class AutoStubProcessor : AbstractProcessor() {
       StubGenerator(it).brewJava().writeTo(filer)
     }
 
-    return false
+    return true
   }
 
   private fun getModels(environment: RoundEnvironment): List<StubModel> {
