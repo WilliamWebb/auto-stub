@@ -29,13 +29,11 @@ private fun getModifiers(modifiers: Int): Set<javax.lang.model.element.Modifier>
   return mods
 }
 
-fun Class<*>.modifiers(): Array<javax.lang.model.element.Modifier> {
-  return getModifiers(modifiers).toTypedArray()
-}
+fun Class<*>.modifiers() = getModifiers(modifiers).toTypedArray()
 
-fun Executable.modifiers(): Set<javax.lang.model.element.Modifier> {
-  return getModifiers(modifiers)
-}
+fun Class<*>.packageName() = this.`package`.name
+
+fun Executable.modifiers()= getModifiers(modifiers)
 
 fun AutoStub.Stub.className(): String {
   try {

@@ -1,44 +1,26 @@
 package io.williamwebb.auto.stub
 
 import com.google.auto.service.AutoService
-import java.util.*
-import javax.annotation.processing.*
+import javax.annotation.processing.AbstractProcessor
+import javax.annotation.processing.Processor
+import javax.annotation.processing.RoundEnvironment
 import javax.lang.model.SourceVersion
 import javax.lang.model.element.TypeElement
-import javax.lang.model.util.Elements
-import javax.lang.model.util.Types
 
 /**
  * Created by williamwebb on 3/6/16.
  */
-
 @AutoService(Processor::class)
 open class AutoStubProcessor : AbstractProcessor() {
 
-  private var typeUtils: Types? = null
-  private var elementUtils: Elements? = null
-  private var filer: Filer? = null
-  private var messager: Messager? = null
-
-  @Synchronized override fun init(processingEnv: ProcessingEnvironment) {
-    super.init(processingEnv)
-
-    typeUtils = processingEnv.typeUtils
-    elementUtils = processingEnv.elementUtils
-    filer = processingEnv.filer
-    messager = processingEnv.messager
-  }
-
   override fun process(set: Set<TypeElement>, env: RoundEnvironment): Boolean {
-    var models = ArrayList<StubModel>()
     try {
-      models.addAll(getModels(env))
+      getModels(env)
+        .forEach {
+          StubGenerator(it).brewJava().writeTo(processingEnv.filer)
+        }
     } catch(cnfe :ClassNotFoundException) {
       error("The artifact to be stubbed must be added in provided and apt scope.")
-    }
-
-    models.forEach {
-      StubGenerator(it).brewJava().writeTo(filer)
     }
 
     return true
@@ -50,12 +32,11 @@ open class AutoStubProcessor : AbstractProcessor() {
       .map { it.value.toList() }
       .flatMap { it }
       .map { Class.forName(it.className()) }
-      .map {
-        createStubModel(it, it.`package`.name)
-      }
+      .map { createStubModel(it, it.`package`.name) }
+      .toList() // not sure how it worked without this?
   }
 
-  private fun createStubModel(clazz: Class<*>, packageName: String): StubModel =
+  private fun createStubModel(clazz: Class<*>, packageName: String) =
       StubModel(
           clazz.simpleName,
           packageName,
@@ -67,7 +48,7 @@ open class AutoStubProcessor : AbstractProcessor() {
 
   private fun processInnerClasses(parent: String, clazz: Class<*>): List<StubModel> {
     return clazz.declaredClasses.map {
-      createStubModel(it, "${clazz.`package`.name}.$parent")
+      createStubModel(it, "${clazz.packageName()}.$parent")
     }.toList()
   }
 
