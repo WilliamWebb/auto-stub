@@ -14,4 +14,5 @@ data class StubModel(
     val modifiers: Array<Modifier>,
     val constructors: Array<Constructor<*>>,
     val methods: Array<Method>,
-    val innerClasses: List<StubModel> = ArrayList())
+    val innerClasses: List<StubModel> = ArrayList()
+)

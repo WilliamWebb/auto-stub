@@ -15,10 +15,9 @@ open class AutoStubProcessor : AbstractProcessor() {
 
   override fun process(set: Set<TypeElement>, env: RoundEnvironment): Boolean {
     try {
-      getModels(env)
-        .forEach {
-          StubGenerator(it).brewJava().writeTo(processingEnv.filer)
-        }
+      getModels(env).forEach {
+        StubGenerator(it).brewJava().writeTo(processingEnv.filer)
+      }
     } catch(cnfe :ClassNotFoundException) {
       error("The artifact to be stubbed must be added in provided and apt scope.")
     }

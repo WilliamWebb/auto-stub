@@ -5,7 +5,7 @@ import java.lang.reflect.Constructor
 import java.lang.reflect.Executable
 import java.lang.reflect.Method
 import java.lang.reflect.Type
-import java.util.HashSet
+import java.util.*
 import javax.lang.model.element.Modifier
 
 /**
@@ -13,7 +13,7 @@ import javax.lang.model.element.Modifier
  */
 class StubGenerator(internal val model: StubModel) {
 
-  final val INSTANCES = HashSet<Type>()
+  val INSTANCES = HashSet<Type>()
 
   fun brewJava(): JavaFile {
 
