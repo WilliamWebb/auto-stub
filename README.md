@@ -1,4 +1,4 @@
-Automatic Stub Generator [![Build Status](https://travis-ci.org/jug6ernaut/auto-stub.svg?branch=master)](https://travis-ci.org/jug6ernaut/auto-stub)
+Automatic Stub Generator [![Build Status](https://travis-ci.org/williamwebb/auto-stub.svg?branch=master)](https://travis-ci.org/williamwebb/auto-stub)
 ============
 
 Usage
